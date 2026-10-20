@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>海边晚风</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        @keyframes fadeIn { to { opacity:1; } }
+        @keyframes fadeOut {
+            from { opacity:1; }
+            to { opacity:0; }
+        }
+        @keyframes wave {
+            0%,100% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+        }
+        body {
+            opacity: 0;
+            animation: fadeIn 1.2s ease forwards;
+            background: #0f2438;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #b8e4f5;
+            font-family: "微软雅黑", monospace;
+            position: relative;
+            overflow: hidden;
+        }
+        .wind{
+            position:absolute;
+            font-size:24px;
+            animation: wave 3.5s ease-in-out infinite;
+            opacity:0.45;
+        }
+        .box {
+            text-align:center;
+            z-index:2;
+        }
+        h1 {
+            font-size:48px;
+            margin-bottom:40px;
+            text-shadow: 0 0 12px #66bbd8;
+        }
+        .back-btn {
+            padding:14px 30px;
+            font-size:20px;
+            border:1px solid #77c8e2;
+            background:#16344c;
+            color:#b8e4f5;
+            cursor:pointer;
+            transition:0.3s;
+        }
+        .back-btn:hover {
+            background:#246088;
+            box-shadow:0 0 20px #44aacc;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🌊 海边晚风</h1>
+        <button class="back-btn" onclick="goBack()">返回菜单</button>
+    </div>
+    <script>
+        const windEmoji = ['~','〰','≋'];
+        for(let i=0;i<10;i++){
+            let el = document.createElement('div');
+            el.className="wind";
+            el.innerText = windEmoji[Math.floor(Math.random()*windEmoji.length)];
+            el.style.left = Math.random()*90 + "%";
+            el.style.top = Math.random()*85 + "%";
+            el.style.animationDelay = Math.random()*2 + "s";
+            document.body.appendChild(el);
+        }
+        function goBack(){
+            document.body.style.animation = "fadeOut 0.9s ease forwards";
+            setTimeout(()=>{
+                location.href="menu.html";
+            },800);
+        }
+    </script>
+</body>
+</html>
