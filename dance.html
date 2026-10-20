@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>霓虹舞厅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        @keyframes fadeIn { to { opacity:1; } }
+        @keyframes fadeOut {
+            from { opacity:1; }
+            to { opacity:0; }
+        }
+        @keyframes bgFlash {
+            0% { background-position:0% 50%; }
+            50% { background-position:100% 50%; }
+            100% { background-position:0% 50%; }
+        }
+        @keyframes neonPulse {
+            0%,100% { text-shadow: 0 0 8px #ff22aa, 0 0 20px #ff2288; }
+            50% { text-shadow: 0 0 16px #ff22aa, 0 0 40px #ff2288,0 0 60px #ff44bb; }
+        }
+        body {
+            opacity: 0;
+            animation: fadeIn 1.2s ease forwards, bgFlash 4s ease infinite;
+            background: linear-gradient(45deg, #050005, #2b0020, #550035, #200018);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #ffbbee;
+            font-family: "微软雅黑", monospace;
+        }
+        .box {
+            text-align:center;
+        }
+        h1 {
+            font-size:48px;
+            margin-bottom:40px;
+            animation: neonPulse 2s ease infinite;
+        }
+        .back-btn {
+            padding:14px 30px;
+            font-size:20px;
+            border:1px solid #ff77cc;
+            background:#220022;
+            color:#ffbbee;
+            cursor:pointer;
+            transition:0.3s;
+        }
+        .back-btn:hover {
+            background:#ff1177;
+            box-shadow:0 0 20px #ff2299;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>✨ 霓虹舞厅 ✨</h1>
+        <button class="back-btn" onclick="goBack()">返回菜单</button>
+    </div>
+    <script>
+        function goBack(){
+            document.body.style.animation = "fadeOut 0.9s ease forwards";
+            setTimeout(()=>{
+                location.href="menu.html";
+            },800);
+        }
+    </script>
+</body>
+</html>
