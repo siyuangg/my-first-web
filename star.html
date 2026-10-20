@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>星空露台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        @keyframes fadeIn { to { opacity:1; } }
+        @keyframes fadeOut {
+            from { opacity:1; }
+            to { opacity:0; }
+        }
+        @keyframes twinkle {
+            0%,100% { opacity:0.3; }
+            50% { opacity:1; }
+        }
+        body {
+            opacity: 0;
+            animation: fadeIn 1.2s ease forwards;
+            background: #050518;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #d8e8ff;
+            font-family: "微软雅黑", monospace;
+            position: relative;
+            overflow: hidden;
+        }
+        /* 星星 */
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2.5s ease-in-out infinite;
+        }
+        .box {
+            text-align:center;
+            z-index: 2;
+        }
+        h1 {
+            font-size:48px;
+            margin-bottom:40px;
+            text-shadow: 0 0 12px #88bbff;
+        }
+        .back-btn {
+            padding:14px 30px;
+            font-size:20px;
+            border:1px solid #99bbff;
+            background:#101830;
+            color:#d8e8ff;
+            cursor:pointer;
+            transition:0.3s;
+        }
+        .back-btn:hover {
+            background:#204080;
+            box-shadow:0 0 20px #6699ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🌌 星空露台</h1>
+        <button class="back-btn" onclick="goBack()">返回菜单</button>
+    </div>
+
+    <script>
+        // 随机生成星星
+        for(let i=0; i<80; i++){
+            const s = document.createElement('div');
+            s.className = 'star';
+            const size = Math.random() * 2 + 1;
+            s.style.width = size + 'px';
+            s.style.height = size + 'px';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.top = Math.random() * 100 + '%';
+            s.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(s);
+        }
+
+        function goBack(){
+            document.body.style.animation = "fadeOut 0.9s ease forwards";
+            setTimeout(()=>{
+                location.href="menu.html";
+            },800);
+        }
+    </script>
+</body>
+</html>
