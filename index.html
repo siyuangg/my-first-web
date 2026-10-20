@@ -10,110 +10,112 @@
             box-sizing: border-box;
             cursor: default;
         }
-
-        /* 90年代复古美艳主背景 */
-        body {
-            background: linear-gradient(45deg, #000, #2e002e, #4a0038, #6a004a);
-            background-size: 400% 400%;
-            animation: bgShift 12s ease infinite;
-            color: #ff99ff;
-            font-family: "微软雅黑", monospace;
-            min-height: 100vh;
-            overflow-x: hidden;
+        @keyframes fadeIn {
+            to { opacity: 1; }
         }
-
-        /* 背景缓慢动效 */
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
         @keyframes bgShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
-        /* 复古容器边框 */
-        .retro-box {
-            width: 90%;
-            max-width: 800px;
-            margin: 60px auto;
-            padding: 30px;
-            border: 4px double #ff33cc;
-            background: #00000088;
-            box-shadow: 0 0 25px #ff33cc, 0 0 45px #ff00ff;
+        @keyframes boxFade {
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        /* 标题闪烁效果 */
-        .neon-title {
+        body {
+            opacity: 0;
+            animation: fadeIn 1.2s ease forwards, bgShift 12s ease infinite;
+            background: linear-gradient(45deg, #000, #2e002e, #4a0038, #6a004a);
+            background-size: 400% 400%;
+            color: #ff99ff;
+            font-family: "微软雅黑", monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .box {
+            border: 2px solid #ff22aa;
+            padding: 60px 80px;
             text-align: center;
-            font-size: 42px;
-            color: #ff33cc;
-            text-shadow: 0 0 5px #ff33cc, 0 0 15px #ff00ff, 0 0 25px #ff66ff;
-            margin: 20px 0;
-            animation: blink 1.8s infinite alternate;
+            box-shadow:
+                0 0 10px #ff22aa,
+                0 0 20px #ff22aa,
+                0 0 40px #ff22aa,
+                inset 0 0 15px #ff2266;
+            border-radius: 4px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: boxFade 1.5s 0.5s ease forwards;
         }
-
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
+        .title {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow:
+                0 0 6px #ff44bb,
+                0 0 12px #ff44bb,
+                0 0 24px #ff2299;
+            animation: neonBlink 2.2s ease-in-out infinite alternate;
         }
-
-        /* 复古文字 */
-        .retro-text {
-            font-size: 18px;
+        @keyframes neonBlink {
+            0% {
+                text-shadow:
+                    0 0 6px #ff44bb,
+                    0 0 12px #ff44bb,
+                    0 0 24px #ff2299;
+            }
+            100% {
+                text-shadow:
+                    0 0 2px #ff44bb,
+                    0 0 6px #ff44bb,
+                    0 0 12px #ff2299;
+            }
+        }
+        .desc {
+            font-size: 20px;
             line-height: 1.8;
-            text-align: center;
-            margin: 20px 0;
-            color: #ffccff;
+            margin-bottom: 35px;
+            color: #ffbbee;
         }
-
-        /* 90年代按钮 */
-        .retro-btn {
-            display: block;
-            width: 220px;
-            margin: 30px auto;
-            padding: 12px;
-            background: #ff0066;
-            color: white;
-            font-size: 16px;
-            border: 2px solid #ff99cc;
-            box-shadow: 0 0 10px #ff3399;
-            transition: 0.3s;
-            text-align: center;
+        .neon-btn {
+            font-size: 22px;
+            padding: 14px 36px;
+            border: 2px solid #ff1199;
+            background: #ff1188;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 3px;
+            box-shadow:
+                0 0 8px #ff1199,
+                0 0 18px #ff1188;
+            transition: all 0.3s;
         }
-
-        .retro-btn:hover {
-            background: #ff3399;
-            transform: scale(1.08);
-            box-shadow: 0 0 20px #ff33cc;
-        }
-
-        /* 鼠标爱心效果 */
-        .heart {
-            position: fixed;
-            pointer-events: none;
-            animation: heartFly 1.5s linear forwards;
-            color: #ff33cc;
-            font-size: 18px;
-        }
-
-        @keyframes heartFly {
-            0% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-80px); }
+        .neon-btn:hover {
+            background: #ff33aa;
+            box-shadow:
+                0 0 12px #ff1199,
+                0 0 30px #ff2299,
+                0 0 50px #ff1177;
         }
     </style>
 </head>
-
 <body>
-    <div class="retro-box">
-        <h1 class="neon-title" id="typeTitle">✨ 1990S 复古美艳空间 ✨</h1>
-        <p class="retro-text">欢迎来到复古霓虹世界<br>充满迷幻、美艳与怀旧的气息</p>
-        <p class="retro-text">鼠标移动会掉落爱心 ❤️<br>点击按钮触发特效</p>
-        <button class="retro-btn" onclick="showMessage()">点击进入复古世界</button>
+    <div class="box">
+        <h1 class="title" id="title"></h1>
+        <div class="desc">
+            欢迎来到复古霓虹世界<br>
+            充满迷幻、美艳与怀旧的气息
+        </div>
+        <button class="neon-btn" onclick="goMenu()">欢迎进入我的世界</button>
     </div>
 
     <script>
-        // 打字机效果
-        const title = document.getElementById("typeTitle");
-        const text = "✨ 1990S 复古美艳空间 ✨";
+        const title = document.getElementById("title");
+        const text = "✨ 欢迎宿主进入 ✨";
         let index = 0;
 
         function typeWriter() {
@@ -125,21 +127,11 @@
         }
         window.onload = typeWriter;
 
-        // 鼠标移动掉落爱心
-        document.addEventListener("mousemove", function(e) {
-            const heart = document.createElement("div");
-            heart.className = "heart";
-            heart.innerHTML = "❤";
-            heart.style.left = e.pageX + "px";
-            heart.style.top = e.pageY + "px";
-            document.body.appendChild(heart);
-
-            setTimeout(() => heart.remove(), 1400);
-        });
-
-        // 按钮交互
-        function showMessage() {
-            alert("✨ 欢迎来到90年代复古美艳世界 ✨\n霓虹闪烁 · 复古迷幻 · 美艳永恒");
+        function goMenu() {
+            document.body.style.animation = "fadeOut 0.9s ease forwards";
+            setTimeout(()=>{
+                location.href = "menu.html";
+            },800);
         }
     </script>
 </body>
