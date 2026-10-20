@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>我的世界 - 选择面板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        @keyframes fadeIn { to { opacity:1; } }
+        @keyframes fadeOut {
+            from { opacity:1; }
+            to { opacity:0; }
+        }
+        @keyframes bgShift {
+            0% { background-position:0% 50%; }
+            50% { background-position:100% 50%; }
+            100% { background-position:0% 50%; }
+        }
+        @keyframes wrapFade {
+            to { opacity:1; transform:translateY(30px); }
+        }
+        body {
+            opacity: 0;
+            animation: fadeIn 1.2s ease forwards, bgShift 14s ease infinite;
+            background: linear-gradient(45deg, #000, #1b001b, #330028, #4e0038);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #ffbbee;
+            font-family: "微软雅黑", monospace;
+        }
+        .wrap {
+            border:2px solid #ff44bb;
+            padding:50px 70px;
+            box-shadow:0 0 15px #ff22aa,0 0 35px #ff2288;
+            border-radius:6px;
+            text-align:center;
+            opacity:0;
+            transform:translateY(30px);
+            animation: wrapFade 1.4s 0.4s ease forwards;
+        }
+        h2 {
+            font-size:36px;
+            margin-bottom:30px;
+            text-shadow:0 0 8px #ff44bb,0 0 20px #ff2299;
+        }
+        .option-list {
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:20px;
+            margin-bottom:30px;
+        }
+        .opt-btn {
+            font-size:19px;
+            padding:14px 24px;
+            border:1px solid #ff33aa;
+            background:#110011;
+            color:#ffbbee;
+            cursor:pointer;
+            box-shadow:0 0 6px #ff2299;
+            transition:0.25s;
+        }
+        .opt-btn:hover {
+            background:#ff1177;
+            color:white;
+            box-shadow:0 0 15px #ff1188,0 0 30px #ff2299;
+        }
+        .back-btn {
+            margin-top:10px;
+            padding:12px 28px;
+            font-size:18px;
+            border:1px solid #ff77cc;
+            background:#220022;
+            color:#ffbbee;
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h2>选择你想去的地方</h2>
+        <div class="option-list">
+            <button class="opt-btn">霓虹舞厅</button>
+            <button class="opt-btn">星空露台</button>
+            <button class="opt-btn">复古录像厅</button>
+            <button class="opt-btn">梦境回廊</button>
+            <button class="opt-btn">秘密房间</button>
+            <button class="opt-btn">海边晚风</button>
+        </div>
+        <button class="back-btn" onclick="backHome()">返回首页</button>
+    </div>
+
+    <script>
+        function backHome(){
+            document.body.style.animation = "fadeOut 0.9s ease forwards";
+            setTimeout(()=>{
+                location.href="index.html";
+            },800);
+        }
+    </script>
+</body>
+</html>
