@@ -1,83 +1,161 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>菜单</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        @keyframes fadeIn { to { opacity:1; } }
-        @keyframes fadeOut {
-            from { opacity:1; }
-            to { opacity:0; }
-        }
-        @keyframes bgFlash {
-            0% { background-position:0% 50%; }
-            50% { background-position:100% 50%; }
-            100% { background-position:0% 50%; }
-        }
-        body {
-            opacity: 0;
-            animation: fadeIn 1.2s ease forwards, bgFlash 6s ease infinite;
-            background: linear-gradient(45deg, #050005, #2b0020, #550035, #200018);
-            background-size: 400% 400%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #ffbbee;
-            font-family: "微软雅黑", monospace;
-        }
-        .container{
-            text-align:center;
-        }
-        h1{
-            font-size:42px;
-            margin-bottom:40px;
-        }
-        .btn-wrap{
-            display:grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap:22px;
-        }
-        .menu-btn {
-            padding:16px 24px;
-            font-size:19px;
-            border:1px solid #ff77cc;
-            background:#220022;
-            color:#ffbbee;
-            cursor:pointer;
-            transition:0.3s;
-        }
-        .menu-btn:hover {
-            background:#ff1177;
-            box-shadow:0 0 20px #ff2299;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>选择场景</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  width:100vw;
+  height:100vh;
+  background:#440036;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  font-family:"Microsoft Yahei",sans-serif;
+  position:relative;
+}
+.star-field{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.meteor{
+  position:absolute;
+  width:80px;
+  height:2px;
+  background:linear-gradient(90deg,#ff88dd,transparent);
+  border-radius:99px;
+  opacity:0;
+  filter:drop-shadow(0 0 6px #ff44bb);
+}
+.corner-star{
+  position:absolute;
+  color:#ffbbee;
+  font-size:26px;
+  filter:drop-shadow(0 0 8px #ff44bb);
+  animation: blink 2.2s infinite;
+}
+.star-tl{top:10%;left:10%;animation-delay:0s;}
+.star-tr{top:10%;right:10%;animation-delay:0.6s;}
+.star-bl{bottom:10%;left:10%;animation-delay:1.1s;}
+.star-br{bottom:10%;right:10%;animation-delay:1.7s;}
+
+@keyframes blink{
+  0%,100%{opacity:0.2;transform:scale(0.75);}
+  50%{opacity:1;transform:scale(1.2);}
+}
+
+h1{
+  font-size:46px;
+  color:#ffbbee;
+  text-shadow:0 0 12px #ff44bb,0 0 22px #ff2299;
+  margin-bottom:48px;
+  text-align:center;
+}
+.scene-box{
+  display:grid;
+  grid-template-columns: repeat(3, 200px);
+  gap:24px;
+}
+.scene-btn{
+  padding:20px 10px;
+  font-size:22px;
+  color:#ffccee;
+  background:transparent;
+  border:2px solid #ff33aa;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.3s ease;
+  animation: breathe 2.8s ease-in-out infinite;
+}
+.scene-btn:nth-child(1){animation-delay:0s;}
+.scene-btn:nth-child(2){animation-delay:0.4s;}
+.scene-btn:nth-child(3){animation-delay:0.8s;}
+.scene-btn:nth-child(4){animation-delay:1.2s;}
+.scene-btn:nth-child(5){animation-delay:1.6s;}
+.scene-btn:nth-child(6){animation-delay:2.0s;}
+
+@keyframes breathe{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.06);}
+}
+.scene-btn:hover{
+  background:#ff118855;
+  box-shadow:0 0 22px #ff33aa;
+  text-shadow:0 0 8px #ffbbee;
+  animation-play-state:paused;
+  transform:scale(1.08);
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>选择场景</h1>
-        <div class="btn-wrap">
-            <button class="menu-btn" onclick="goPage('dance.html')">霓虹舞厅</button>
-           <button class="menu-btn" onclick="goPage('star.html')">星空露台</button>
-            <button class="menu-btn" onclick="goPage('video.html')">复古录像厅</button>
-           <button class="menu-btn" onclick="goPage('dream.html')">梦境回廊</button>
-            <button class="menu-btn" onclick="goPage('secret.html')">秘密房间</button>
-            <button class="menu-btn" onclick="goPage('sea.html')">海边晚风</button>
-        </div>
-    </div>
-    <script>
-        function goPage(url){
-            document.body.style.animation = "fadeOut 0.9s ease forwards";
-            setTimeout(()=>{
-                location.href=url;
-            },800);
-        }
-    </script>
+<div class="star-field">
+  <div class="corner-star star-tl">✦</div>
+  <div class="corner-star star-tr">✦</div>
+  <div class="corner-star star-bl">✦</div>
+  <div class="corner-star star-br">✦</div>
+</div>
+
+<h1>宿主请一键选择你要进入的场景</h1>
+<div class="scene-box">
+  <button class="scene-btn" onclick="location.href='dance.html'">霓虹舞厅</button>
+  <button class="scene-btn" onclick="location.href='star.html'">星空露台</button>
+  <button class="scene-btn" onclick="location.href='video.html'">复古录像厅</button>
+  <button class="scene-btn" onclick="location.href='dream.html'">梦境回廊</button>
+  <button class="scene-btn" onclick="location.href='secret.html'">秘密房间</button>
+  <button class="scene-btn" onclick="location.href='sea.html'">海边晚风</button>
+</div>
+
+<script>
+const field = document.querySelector('.star-field');
+function createMeteor(){
+  const m = document.createElement('div');
+  m.className = 'meteor';
+  const side = Math.floor(Math.random()*4);
+  let startX,startY,endX,endY;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  switch(side){
+    case 0:
+      startX = 0; startY = 0;
+      endX = w*0.35; endY = h*0.35;
+      break;
+    case 1:
+      startX = w; startY = 0;
+      endX = w*0.65; endY = h*0.35;
+      break;
+    case 2:
+      startX = 0; startY = h;
+      endX = w*0.35; endY = h*0.65;
+      break;
+    case 3:
+      startX = w; startY = h;
+      endX = w*0.65; endY = h*0.65;
+      break;
+  }
+  m.style.left = startX+'px';
+  m.style.top = startY+'px';
+  field.appendChild(m);
+
+  m.animate([
+    {opacity:0, transform:'translate(0,0)'},
+    {opacity:1},
+    {opacity:0, transform:`translate(${endX-startX}px,${endY-startY}px)`}
+  ],{
+    duration: 1200 + Math.random()*1200,
+    easing:'linear'
+  })
+  setTimeout(()=>m.remove(),2500);
+}
+function loopMeteor(){
+  createMeteor();
+  setTimeout(loopMeteor, 1200 + Math.random()*2800);
+}
+loopMeteor();
+</script>
 </body>
 </html>
