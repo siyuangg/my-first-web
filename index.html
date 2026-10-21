@@ -17,20 +17,21 @@ body{
   font-family:"Microsoft Yahei",sans-serif;
   position:relative;
 }
-/* 流星容器 */
-.star-field{
+/* 流沙容器，放在方框区域 */
+.sand-container{
   position:absolute;
-  inset:0;
+  width:700px;
+  height:320px;
   pointer-events:none;
+  z-index:11;
 }
-.meteor{
+.sand{
   position:absolute;
-  width:80px;
-  height:2px;
-  background:linear-gradient(90deg,#ff88dd,transparent);
-  border-radius:99px;
-  opacity:0;
-  filter:drop-shadow(0 0 6px #ff44bb);
+  width:4px;
+  height:4px;
+  background:#ff99dd;
+  border-radius:50%;
+  box-shadow: 0 0 6px #ff66cc;
 }
 /* 四角闪烁星星 */
 .corner-star{
@@ -50,7 +51,7 @@ body{
   50%{opacity:1;transform:scale(1.2);}
 }
 
-/* 中间霓虹盒子 */
+/* 中间霓虹盒子，和你截图保持一致 */
 .wrap{
   width:700px;
   padding:60px 40px;
@@ -94,12 +95,12 @@ body{
 </style>
 </head>
 <body>
-<div class="star-field">
-  <div class="corner-star star-tl">✦</div>
-  <div class="corner-star star-tr">✦</div>
-  <div class="corner-star star-bl">✦</div>
-  <div class="corner-star star-br">✦</div>
-</div>
+<div class="corner-star star-tl">✦</div>
+<div class="corner-star star-tr">✦</div>
+<div class="corner-star star-bl">✦</div>
+<div class="corner-star star-br">✦</div>
+
+<div class="sand-container"></div>
 
 <div class="wrap">
   <h1>欢迎来到复古霓虹世界</h1>
@@ -108,51 +109,70 @@ body{
 </div>
 
 <script>
-const field = document.querySelector('.star-field');
-function createMeteor(){
-  const m = document.createElement('div');
-  m.className = 'meteor';
-  const side = Math.floor(Math.random()*4);
-  let startX,startY,endX,endY;
-  const w = window.innerWidth;
-  const h = window.innerHeight;
+// 身份判断：没有设置名字密码就跳转到start.html
+let hostName = localStorage.getItem("hostName");
+let hostPwd = localStorage.getItem("hostPwd");
+if(!hostName || !hostPwd){
+  location.href = "start.html";
+}
+
+const container = document.querySelector('.sand-container');
+// 流沙：从方框四条边框持续生成，向下流动
+function createSand(){
+  const s = document.createElement('div');
+  s.className = 'sand';
+  // 四条边随机选一条作为发射起点
+  const side = Math.floor(Math.random() * 4);
+  let x,y;
+  const w = 700;
+  const h = 320;
   switch(side){
-    case 0:
-      startX = 0; startY = 0;
-      endX = w*0.35; endY = h*0.35;
+    case 0: // 上边
+      x = Math.random() * w;
+      y = 0;
       break;
-    case 1:
-      startX = w; startY = 0;
-      endX = w*0.65; endY = h*0.35;
+    case 1: // 右边
+      x = w;
+      y = Math.random() * h;
       break;
-    case 2:
-      startX = 0; startY = h;
-      endX = w*0.35; endY = h*0.65;
+    case 2: // 下边
+      x = Math.random() * w;
+      y = h;
       break;
-    case 3:
-      startX = w; startY = h;
-      endX = w*0.65; endY = h*0.65;
+    case 3: // 左边
+      x = 0;
+      y = Math.random() * h;
       break;
   }
-  m.style.left = startX+'px';
-  m.style.top = startY+'px';
-  field.appendChild(m);
+  s.style.left = x + 'px';
+  s.style.top = y + 'px';
+  container.appendChild(s);
 
-  m.animate([
-    {opacity:0, transform:'translate(0,0)'},
-    {opacity:1},
-    {opacity:0, transform:`translate(${endX-startX}px,${endY-startY}px)`}
-  ],{
-    duration: 1200 + Math.random()*1200,
-    easing:'linear'
-  })
-  setTimeout(()=>m.remove(),2500);
+  // 向下流动，带一点点横向偏移，模拟流沙散落
+  const speedY = 1.5 + Math.random() * 2.2;
+  const driftX = (Math.random()-0.5)*0.8;
+  let ty = y;
+  let tx = x;
+  function fall(){
+    ty += speedY;
+    tx += driftX;
+    s.style.top = ty + 'px';
+    s.style.left = tx + 'px';
+    // 流出容器底部就删除
+    if(ty > h){
+      s.remove();
+    }else{
+      requestAnimationFrame(fall);
+    }
+  }
+  fall();
 }
-function loopMeteor(){
-  createMeteor();
-  setTimeout(loopMeteor, 1000 + Math.random()*3000);
+// 源源不断生成流沙粒子
+function loopSand(){
+  createSand();
+  setTimeout(loopSand, 25 + Math.random()*40);
 }
-loopMeteor();
+loopSand();
 </script>
 </body>
 </html>
