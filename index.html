@@ -1,138 +1,158 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>RETRO 90s</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: default;
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-        @keyframes bgShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        @keyframes boxFade {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        body {
-            opacity: 0;
-            animation: fadeIn 1.2s ease forwards, bgShift 12s ease infinite;
-            background: linear-gradient(45deg, #000, #2e002e, #4a0038, #6a004a);
-            background-size: 400% 400%;
-            color: #ff99ff;
-            font-family: "微软雅黑", monospace;
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .box {
-            border: 2px solid #ff22aa;
-            padding: 60px 80px;
-            text-align: center;
-            box-shadow:
-                0 0 10px #ff22aa,
-                0 0 20px #ff22aa,
-                0 0 40px #ff22aa,
-                inset 0 0 15px #ff2266;
-            border-radius: 4px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: boxFade 1.5s 0.5s ease forwards;
-        }
-        .title {
-            font-size: 48px;
-            margin-bottom: 20px;
-            text-shadow:
-                0 0 6px #ff44bb,
-                0 0 12px #ff44bb,
-                0 0 24px #ff2299;
-            animation: neonBlink 2.2s ease-in-out infinite alternate;
-        }
-        @keyframes neonBlink {
-            0% {
-                text-shadow:
-                    0 0 6px #ff44bb,
-                    0 0 12px #ff44bb,
-                    0 0 24px #ff2299;
-            }
-            100% {
-                text-shadow:
-                    0 0 2px #ff44bb,
-                    0 0 6px #ff44bb,
-                    0 0 12px #ff2299;
-            }
-        }
-        .desc {
-            font-size: 20px;
-            line-height: 1.8;
-            margin-bottom: 35px;
-            color: #ffbbee;
-        }
-        .neon-btn {
-            font-size: 22px;
-            padding: 14px 36px;
-            border: 2px solid #ff1199;
-            background: #ff1188;
-            color: #fff;
-            cursor: pointer;
-            border-radius: 3px;
-            box-shadow:
-                0 0 8px #ff1199,
-                0 0 18px #ff1188;
-            transition: all 0.3s;
-        }
-        .neon-btn:hover {
-            background: #ff33aa;
-            box-shadow:
-                0 0 12px #ff1199,
-                0 0 30px #ff2299,
-                0 0 50px #ff1177;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复古霓虹欢迎页</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  width:100vw;
+  height:100vh;
+  background:#550044;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  font-family:"Microsoft Yahei",sans-serif;
+  position:relative;
+}
+/* 流星容器 */
+.star-field{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.meteor{
+  position:absolute;
+  width:80px;
+  height:2px;
+  background:linear-gradient(90deg,#ff88dd,transparent);
+  border-radius:99px;
+  opacity:0;
+  filter:drop-shadow(0 0 6px #ff44bb);
+}
+/* 四角闪烁星星 */
+.corner-star{
+  position:absolute;
+  color:#ffbbee;
+  font-size:24px;
+  filter:drop-shadow(0 0 8px #ff44bb);
+  animation: blink 2.5s ease-in-out infinite;
+}
+.star-tl{top:12%;left:12%;animation-delay:0s;}
+.star-tr{top:12%;right:12%;animation-delay:0.7s;}
+.star-bl{bottom:12%;left:12%;animation-delay:1.3s;}
+.star-br{bottom:12%;right:12%;animation-delay:1.9s;}
+
+@keyframes blink{
+  0%,100%{opacity:0.2;transform:scale(0.8);}
+  50%{opacity:1;transform:scale(1.2);}
+}
+
+/* 中间霓虹盒子 */
+.wrap{
+  width:700px;
+  padding:60px 40px;
+  background:#440036;
+  border:2px solid #ff33aa;
+  border-radius:12px;
+  text-align:center;
+  box-shadow: 0 0 25px #ff33aa, 0 0 45px #ff229977;
+  z-index:10;
+}
+.wrap h1{
+  font-size:34px;
+  color:#ffccee;
+  margin-bottom:20px;
+  font-weight:normal;
+}
+.wrap p{
+  font-size:22px;
+  color:#ffccee;
+  margin:8px 0;
+  opacity:0.85;
+}
+.enter-btn{
+  margin-top:36px;
+  padding:16px 50px;
+  font-size:42px;
+  font-weight:bold;
+  border:none;
+  background:#ff1188;
+  color:#ffddf5;
+  border-radius:6px;
+  box-shadow:0 0 15px #ff2299;
+  cursor:pointer;
+  transition:0.3s ease;
+  text-shadow:0 0 10px #ff44bb;
+}
+.enter-btn:hover{
+  background:#ff33aa;
+  box-shadow:0 0 25px #ff44bb;
+}
+</style>
 </head>
 <body>
-    <div class="box">
-        <h1 class="title" id="title"></h1>
-        <div class="desc">
-            欢迎来到复古霓虹世界<br>
-            充满迷幻、美艳与怀旧的气息
-        </div>
-        <button class="neon-btn" onclick="goMenu()">欢迎进入我的世界</button>
-    </div>
+<div class="star-field">
+  <div class="corner-star star-tl">✦</div>
+  <div class="corner-star star-tr">✦</div>
+  <div class="corner-star star-bl">✦</div>
+  <div class="corner-star star-br">✦</div>
+</div>
 
-    <script>
-        const title = document.getElementById("title");
-        const text = "✨ 欢迎宿主进入 ✨";
-        let index = 0;
+<div class="wrap">
+  <h1>欢迎来到复古霓虹世界</h1>
+  <p>充满迷幻、美艳与怀旧的气息</p>
+  <button class="enter-btn" onclick="location.href='menu.html'">✨ 欢迎宿主进入 ✨</button>
+</div>
 
-        function typeWriter() {
-            if (index < text.length) {
-                title.innerHTML += text.charAt(index);
-                index++;
-                setTimeout(typeWriter, 120);
-            }
-        }
-        window.onload = typeWriter;
+<script>
+const field = document.querySelector('.star-field');
+function createMeteor(){
+  const m = document.createElement('div');
+  m.className = 'meteor';
+  const side = Math.floor(Math.random()*4);
+  let startX,startY,endX,endY;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  switch(side){
+    case 0:
+      startX = 0; startY = 0;
+      endX = w*0.35; endY = h*0.35;
+      break;
+    case 1:
+      startX = w; startY = 0;
+      endX = w*0.65; endY = h*0.35;
+      break;
+    case 2:
+      startX = 0; startY = h;
+      endX = w*0.35; endY = h*0.65;
+      break;
+    case 3:
+      startX = w; startY = h;
+      endX = w*0.65; endY = h*0.65;
+      break;
+  }
+  m.style.left = startX+'px';
+  m.style.top = startY+'px';
+  field.appendChild(m);
 
-        function goMenu() {
-            document.body.style.animation = "fadeOut 0.9s ease forwards";
-            setTimeout(()=>{
-                location.href = "menu.html";
-            },800);
-        }
-    </script>
+  m.animate([
+    {opacity:0, transform:'translate(0,0)'},
+    {opacity:1},
+    {opacity:0, transform:`translate(${endX-startX}px,${endY-startY}px)`}
+  ],{
+    duration: 1200 + Math.random()*1200,
+    easing:'linear'
+  })
+  setTimeout(()=>m.remove(),2500);
+}
+function loopMeteor(){
+  createMeteor();
+  setTimeout(loopMeteor, 1000 + Math.random()*3000);
+}
+loopMeteor();
+</script>
 </body>
 </html>
