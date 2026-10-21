@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宿主认证</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  width:100vw;height:100vh;
+  background:#2b0022;
+  display:flex;justify-content:center;align-items:center;
+  font-family:"微软雅黑",sans-serif;
+  color:#ffddff;
+  overflow:hidden;
+}
+/* 背景星光 */
+.star{position:absolute;color:#ff99ee;font-size:20px;animation:blink 3s infinite;opacity:0.6}
+@keyframes blink{0%,100%{opacity:0.3;}50%{opacity:1;}}
+
+/* 登录框 */
+.box{
+  background:#3d0030;
+  padding:60px 50px;
+  border-radius:15px;
+  border:2px solid #ff44aa;
+  box-shadow:0 0 30px #ff33aa;
+  text-align:center;
+  z-index:10;
+}
+h1{
+  font-size:36px;
+  color:#ffddff;
+  text-shadow:0 0 10px #ff44bb;
+  margin-bottom:30px;
+}
+input{
+  width:100%;
+  padding:14px 16px;
+  margin:10px 0;
+  font-size:18px;
+  background:#22001a;
+  border:2px solid #ff33aa;
+  border-radius:8px;
+  color:#ffddff;
+  outline:none;
+}
+button{
+  width:100%;
+  padding:16px;
+  margin-top:20px;
+  font-size:22px;
+  font-weight:bold;
+  background:#ff2299;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  box-shadow:0 0 15px #ff33aa;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover{
+  background:#ff44bb;
+  box-shadow:0 0 25px #ff55cc;
+}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>🔐 宿主身份认证</h1>
+  <input type="text" id="username" placeholder="请输入你的专属名字"><br>
+  <input type="password" id="pwd" placeholder="请设置你的专属密码"><br>
+  <button onclick="saveUser()">✅ 确认并进入</button>
+</div>
+
+<script>
+// 保存名字和密码（秘密房间要用）
+function saveUser(){
+  let name = document.getElementById("username").value;
+  let pwd = document.getElementById("pwd").value;
+  
+  if(!name || !pwd){
+    alert("请输入名字和密码！");
+    return;
+  }
+  
+  // 保存到本地
+  localStorage.setItem("hostName", name);
+  localStorage.setItem("hostPwd", pwd);
+  
+  // 跳转到欢迎页
+  location.href = "index.html";
+}
+
+// 背景星光
+for(let i=0;i<20;i++){
+  let s = document.createElement("div");
+  s.className="star";
+  s.innerText="✦";
+  s.style.left=Math.random()*100+"%";
+  s.style.top=Math.random()*100+"%";
+  s.style.animationDelay=Math.random()*3+"s";
+  document.body.appendChild(s);
+}
+</script>
+</body>
+</html>
