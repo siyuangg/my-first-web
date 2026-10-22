@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>霓虹舞厅</title>
+    <title>霓虹舞厅 · K歌模式</title>
     <style>
         * {
             margin: 0;
@@ -34,41 +34,108 @@
             align-items: center;
             justify-content: center;
             color: #ffbbee;
-            font-family: "微软雅黑", monospace;
+            font-family: "微软雅黑", sans-serif;
+            padding: 20px;
         }
+
         .box {
-            text-align:center;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
         }
+
         h1 {
-            font-size:48px;
-            margin-bottom:40px;
+            font-size: 42px;
+            margin-bottom: 20px;
             animation: neonPulse 2s ease infinite;
         }
+
+        /* 音乐播放器 */
+        .player {
+            margin: 20px 0;
+            padding: 20px;
+            background: #1a001a;
+            border: 2px solid #ff55cc;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #ff2299;
+        }
+
+        .music-name {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: #ffddff;
+        }
+
+        audio {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        /* 歌词区域 KTV 风格 */
+        .lyric-box {
+            height: 180px;
+            padding: 15px;
+            background: #110011;
+            border-radius: 8px;
+            border: 1px solid #ff44aa;
+            overflow-y: auto;
+            text-align: center;
+            font-size: 18px;
+            line-height: 2.2;
+            color: #ffccdd;
+            margin: 15px 0;
+            white-space: pre-line;
+        }
+
+        /* 按钮 */
         .back-btn {
-            padding:14px 30px;
-            font-size:20px;
-            border:1px solid #ff77cc;
-            background:#220022;
-            color:#ffbbee;
-            cursor:pointer;
-            transition:0.3s;
+            padding: 14px 30px;
+            font-size: 20px;
+            border: 1px solid #ff77cc;
+            background: #220022;
+            color: #ffbbee;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 8px;
+            margin-top: 10px;
         }
         .back-btn:hover {
-            background:#ff1177;
-            box-shadow:0 0 20px #ff2299;
+            background: #ff1177;
+            box-shadow: 0 0 20px #ff2299;
         }
     </style>
 </head>
+
 <body>
     <div class="box">
-        <h1>✨ 霓虹舞厅 ✨</h1>
+        <h1>✨ 霓虹舞厅 · K歌模式 ✨</h1>
+
+        <div class="player">
+            <div class="music-name">正在播放：小城夏天</div>
+            <!-- 外部音乐直链 -->
+            <audio id="music" controls src="https://mir-s.cdnmd.net/music/484918828.mp3"></audio>
+        </div>
+
+        <!-- KTV 歌词 -->
+        <div class="lyric-box" id="lyric">
+[00:00] 橘黄色的日落 吞没在海平线
+[00:04] 夜色慢慢摊开 露出星光点点
+[00:08] 我听着耳机中Jay的音乐
+[00:12] 从等你下课 到手写的从前
+[00:16] 冒泡汽水和你都是夏天感觉
+[00:20] 着迷你眉间柔情似海的双眼
+[00:24] 心动像风来的不知不觉
+[00:28] 此刻世界聚焦你的出现
+        </div>
+
         <button class="back-btn" onclick="goBack()">返回菜单</button>
     </div>
+
     <script>
         function goBack(){
             document.body.style.animation = "fadeOut 0.9s ease forwards";
             setTimeout(()=>{
-                location.href="menu.html";
+                location.href="secret.html";
             },800);
         }
     </script>
