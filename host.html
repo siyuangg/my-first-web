@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>宿主</title>
+    <style>
+        * {margin:0;padding:0;box-sizing:border-box;}
+        @keyframes fadeIn {to {opacity:1;}}
+        @keyframes fadeOut {from {opacity:1;} to {opacity:0;}}
+        @keyframes filament {
+            0%,100% {transform:translateY(-6px);opacity:0.25;}
+            50% {transform:translateY(6px);opacity:0.45;}}
+        body {
+            opacity:0;animation:fadeIn 1.2s forwards;
+            background:#07070b;color:#a794bb;
+            min-height:100vh;display:flex;flex-direction:column;align-items:center;
+            font-family:"微软雅黑";padding:20px;position:relative;
+        }
+        .filament {
+            position:absolute;animation:filament 6s infinite;
+            font-size:20px;z-index:1;pointer-events:none;
+        }
+        .wrap {width:100%;max-width:700px;text-align:center;z-index:2;}
+        h1 {font-size:42px;margin-bottom:8px;color:#c3aed6;}
+        .sub-title {margin-bottom:24px;color:#847099;}
+        .card {
+            background:#0c0a14;border:1px solid #3b1b54;
+            padding:20px;border-radius:12px;margin-bottom:16px;text-align:left;
+        }
+        .card-title {font-size:18px;margin-bottom:12px;color:#b8a1d1;}
+        textarea {
+            width:100%;padding:10px;margin:6px 0;
+            background:#050409;border:1px solid #301846;
+            color:#b09cc4;border-radius:6px;min-height:120px;
+        }
+        button {
+            padding:10px 16px;background:#0c0a14;border:1px solid #4b256b;
+            color:#b09cc4;border-radius:6px;cursor:pointer;transition:0.3s;
+        }
+        button:hover {background:#271438;box-shadow:0 0 12px #4b256b;}
+        .note-item {
+            padding:10px;margin:8px 0;background:#07050c;
+            border:1px solid #2a153d;border-radius:6px;position:relative;
+        }
+        .note-del {position:absolute;right:8px;top:6px;font-size:12px;}
+        .back-btn {width:100%;padding:14px;font-size:18px;margin-top:8px;}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h1>🧬 宿主</h1>
+    <div class="sub-title">躯体为宿主，意识在此寄居</div>
+
+    <div class="card">
+        <div class="card-title">📝 寄生独白</div>
+        <textarea id="noteInput" placeholder="写下难以言说的思绪，寄存于此……"></textarea>
+        <button onclick="addNote()">寄存独白</button>
+        <button onclick="clearAllNote()">清空全部</button>
+        <div id="noteBox"></div>
+    </div>
+
+    <button class="back-btn" onclick="goBack()">返回菜单</button>
+</div>
+
+<script>
+    const chars = ['≋','⸗','⸙'];
+    for(let i=0;i<12;i++){
+        let e = document.createElement('div');
+        e.className='filament';e.innerText=chars[Math.floor(Math.random()*chars.length)];
+        e.style.left=Math.random()*90+'%';e.style.top=Math.random()*85+'%';
+        e.style.animationDelay=Math.random()*3+'s';document.body.appendChild(e);
+    }
+
+    const noteBox = document.getElementById('noteBox');
+    const noteInput = document.getElementById('noteInput');
+    let noteList = JSON.parse(localStorage.getItem('hostNoteList'))||[];
+
+    function render(){
+        noteBox.innerHTML='';
+        noteList.forEach((item,i)=>{
+            const d=document.createElement('div');d.className='note-item';
+            d.innerHTML=item+'<button class="note-del" onclick="del('+i+')">移除</button>';
+            noteBox.appendChild(d);
+        })
+    }
+
+    function addNote(){
+        const t=noteInput.value.trim();if(!t)return;
+        noteList.push(t);localStorage.setItem('hostNoteList',JSON.stringify(noteList));
+        render();noteInput.value='';
+    }
+
+    function del(i){noteList.splice(i,1);localStorage.setItem('hostNoteList',JSON.stringify(noteList));render();}
+    function clearAllNote(){if(confirm('确定清空？')){noteList=[];localStorage.setItem('hostNoteList','[]');render();}}
+    function goBack(){document.body.style.animation='fadeOut 0.9s';setTimeout(()=>location.href='menu.html',800);}
+    render();
+</script>
+</body>
+</html>
