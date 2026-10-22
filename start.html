@@ -14,11 +14,9 @@ body{
   color:#ffddff;
   overflow:hidden;
 }
-/* 背景星光 */
 .star{position:absolute;color:#ff99ee;font-size:20px;animation:blink 3s infinite;opacity:0.6}
 @keyframes blink{0%,100%{opacity:0.3;}50%{opacity:1;}}
 
-/* 登录框 */
 .box{
   background:#3d0030;
   padding:60px 50px;
@@ -74,7 +72,6 @@ button:hover{
 </div>
 
 <script>
-// 保存名字和密码（秘密房间要用）
 function saveUser(){
   let name = document.getElementById("username").value;
   let pwd = document.getElementById("pwd").value;
@@ -84,15 +81,16 @@ function saveUser(){
     return;
   }
   
-  // 保存到本地
   localStorage.setItem("hostName", name);
   localStorage.setItem("hostPwd", pwd);
   
-  // 跳转到欢迎页
+  alert("✅ 认证成功！欢迎你，" + name);
+  
+  // ✅ 跳转到【场景选择首页】，不是直接进秘密房间
   location.href = "index.html";
 }
 
-// 背景星光
+// 星光背景
 for(let i=0;i<20;i++){
   let s = document.createElement("div");
   s.className="star";
