@@ -2,12 +2,23 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>复古录像厅</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #221510;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #dd9966;
+            border-radius: 3px;
         }
         @keyframes fadeIn { to { opacity:1; } }
         @keyframes fadeOut {
@@ -18,19 +29,27 @@
             0% { transform: translateY(-100%); }
             100% { transform: translateY(100%); }
         }
+        @keyframes flicker {
+            0%, 100% { opacity: 0.97; }
+            50% { opacity: 1; }
+        }
+        @keyframes unlockSnow {
+            0 { opacity:0.85; }
+            100% { opacity:0; }
+        }
         body {
             opacity: 0;
-            animation: fadeIn 1.2s ease forwards;
+            animation: fadeIn 1.2s ease forwards, flicker 3s infinite;
             background: #1a1210;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            padding:30px 15px;
             color: #ffddbb;
             font-family: "微软雅黑", monospace;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
         }
         .scan-line{
             position:absolute;
@@ -38,17 +57,170 @@
             height:4px;
             background:rgba(255,200,150,0.15);
             animation: scan 4s linear infinite;
+            z-index:1;
         }
-        .box {
-            text-align:center;
+        .noise{
+            position:fixed;
+            inset:0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity:0.04;
+            pointer-events:none;
+            z-index:1;
+        }
+        .wrap{
             z-index:2;
+            width:100%;
+            max-width:680px;
         }
         h1 {
-            font-size:48px;
-            margin-bottom:40px;
+            font-size:40px;
+            text-align:center;
+            margin-bottom:24px;
             text-shadow: 0 0 10px #cc7744;
         }
+        .tv-panel{
+            background:#2b1d16;
+            border:3px solid #dd9966;
+            border-radius:16px;
+            padding:24px;
+            box-shadow: 0 0 18px #cc774444, inset 0 0 40px #00000077;
+        }
+        input, textarea, select{
+            width:100%;
+            padding:12px;
+            margin-bottom:10px;
+            background:#1a1210;
+            border:1px solid #dd9966;
+            border-radius:8px;
+            color:#ffddbb;
+            outline:none;
+            font-size:15px;
+        }
+        input[type="date"]{
+            color-scheme: dark;
+        }
+        input[type="file"]{
+            padding:8px;
+        }
+        .tip-small{
+            font-size:12px;
+            color:#ffddbb77;
+            margin:-6px 0 8px;
+        }
+        .btn-row{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+        button{
+            padding:11px 16px;
+            border-radius:8px;
+            border:none;
+            font-size:15px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+        .btn-main{
+            background:#cc7744;
+            color:#fff;
+            flex:1;
+        }
+        .btn-main:hover{
+            box-shadow:0 0 14px #cc7744;
+            background:#dd8855;
+        }
+        .tape-list{
+            margin-top:20px;
+            display:flex;
+            flex-direction:column;
+            gap:16px;
+            max-height:360px;
+            overflow-y:auto;
+            padding-right:4px;
+        }
+        .tape-card{
+            padding:16px;
+            background:#3a281f;
+            border-radius:10px;
+            border-left:5px solid #cc7744;
+            position:relative;
+            overflow:hidden;
+        }
+        .lock-overlay{
+            position:absolute;
+            inset:0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-color:rgba(20,12,8,0.75);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#ffbb88;
+            font-size:16px;
+            letter-spacing:2px;
+            z-index:2;
+        }
+        .lock-overlay.unlock-animate{
+            animation: unlockSnow 1.8s ease forwards;
+        }
+        .card-img{
+            max-width:100%;
+            max-height:240px;
+            border-radius:6px;
+            margin-bottom:10px;
+            object-fit:contain;
+        }
+        .tape-card .title{
+            font-size:19px;
+            margin-bottom:4px;
+        }
+        .tag{
+            display:inline-block;
+            font-size:12px;
+            background:#593c2b;
+            padding:2px 7px;
+            border-radius:4px;
+            margin-bottom:8px;
+        }
+        .tape-card .sub-title{
+            font-size:13px;
+            color:#ffddbb99;
+            margin:6px 0 3px;
+        }
+        .tape-card .desc{
+            font-size:14px;
+            color:#ffddbbdd;
+            margin-bottom:8px;
+            line-height:1.5;
+        }
+        .tape-card .time{
+            font-size:12px;
+            color:#ffddbb77;
+            margin-bottom:10px;
+        }
+        .tape-card .btn-group{
+            display:flex;
+            gap:6px;
+        }
+        .tape-card button{
+            padding:4px 8px;
+            font-size:12px;
+        }
+        .edit{
+            background:#4477bb;
+            color:white;
+        }
+        .del{
+            background:#bb4444;
+            color:white;
+        }
+        .empty-tip{
+            text-align:center;
+            padding:30px 10px;
+            color:#ffddbb66;
+        }
         .back-btn {
+            margin-top:24px;
+            width:100%;
             padding:14px 30px;
             font-size:20px;
             border:1px solid #dd9966;
@@ -65,12 +237,157 @@
 </head>
 <body>
     <div class="scan-line"></div>
-    <div class="box">
-        <h1>📼 复古录像厅</h1>
+    <div class="noise"></div>
+    <div class="wrap">
+        <h1>📼 复古录像厅 · 观影记忆胶囊</h1>
+        <div class="tv-panel">
+            <input id="workTitle" placeholder="作品名称（电影/剧集/音乐剧）">
+            <select id="workType">
+                <option value="电影">电影</option>
+                <option value="剧集">剧集</option>
+                <option value="音乐剧">音乐剧</option>
+                <option value="话剧">话剧</option>
+                <option value="其他">其他</option>
+            </select>
+            <input type="file" id="imgUpload" accept="image/*">
+            <div class="tip-small">上传海报、剧照、现场照片（可选）</div>
+            <textarea id="quoteText" placeholder="摘录台词、片段（可选）"></textarea>
+            <textarea id="feelText" placeholder="写下你的感受、观后感"></textarea>
+            <input id="unlockDate" type="date">
+            <div class="tip-small">解锁日期留空 → 直接可见；选择未来日期 → 上锁封存</div>
+            <div class="btn-row">
+                <button class="btn-main" onclick="saveTape()">封存磁带胶囊</button>
+            </div>
+            <div class="tape-list" id="tapeList"></div>
+        </div>
         <button class="back-btn" onclick="goBack()">返回菜单</button>
     </div>
+
     <script>
+        let leaving = false;
+        let tempImgBase64 = "";
+
+        const imgInput = document.getElementById("imgUpload");
+        imgInput.onchange = function(e){
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                tempImgBase64 = ev.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function getTapes(){
+            return JSON.parse(localStorage.getItem("vhs_movie_capsule")) || [];
+        }
+        function isUnlocked(unlockDateStr){
+            if(!unlockDateStr) return true;
+            const now = new Date();
+            const unlock = new Date(unlockDateStr);
+            return now >= unlock;
+        }
+        function renderTapes(){
+            const box = document.getElementById("tapeList");
+            box.innerHTML = "";
+            const arr = getTapes();
+            if(arr.length === 0){
+                box.innerHTML = `<div class="empty-tip">录像厅空空荡荡，来封存第一份观影记忆 ✧</div>`;
+                return;
+            }
+            arr.forEach((item, idx)=>{
+                const div = document.createElement("div");
+                div.className = "tape-card";
+                const unlocked = isUnlocked(item.unlockDate);
+                let imgHtml = item.img ? `<img class="card-img" src="${item.img}">` : "";
+                div.innerHTML = `
+                    ${!unlocked ? `<div class="lock-overlay">🔒 封存中 · ${item.unlockDate} 解锁</div>` : ""}
+                    ${imgHtml}
+                    <div class="title">${item.title}</div>
+                    <span class="tag">${item.type}</span>
+                    ${item.quote ? `<div class="sub-title">▸ 台词摘录</div><div class="desc">${item.quote}</div>` : ""}
+                    <div class="sub-title">▸ 我的感受</div>
+                    <div class="desc">${item.feel}</div>
+                    <div class="time">📅 封存：${item.saveTime} ${item.unlockDate ? "｜解锁日："+item.unlockDate : "｜即时记录"}</div>
+                    <div class="btn-group">
+                        <button class="edit" onclick="editTape(${idx})">编辑</button>
+                        <button class="del" onclick="delTape(${idx})">销毁磁带</button>
+                    </div>
+                `;
+                box.appendChild(div);
+                if(unlocked && !item.animated){
+                    const overlay = div.querySelector(".lock-overlay");
+                    if(overlay) overlay.classList.add("unlock-animate");
+                    arr[idx].animated = true;
+                    localStorage.setItem("vhs_movie_capsule", JSON.stringify(arr));
+                }
+            })
+        }
+        function saveTape(){
+            const title = document.getElementById("workTitle").value.trim();
+            const type = document.getElementById("workType").value;
+            const quote = document.getElementById("quoteText").value.trim();
+            const feel = document.getElementById("feelText").value.trim();
+            const unlockDate = document.getElementById("unlockDate").value;
+            if(!title) return alert("作品名称不能为空");
+            if(!feel) return alert("至少写下一点你的感受吧");
+
+            const arr = getTapes();
+            arr.push({
+                title,
+                type,
+                quote,
+                feel,
+                img: tempImgBase64,
+                unlockDate,
+                saveTime: new Date().toLocaleString(),
+                animated: false
+            });
+            localStorage.setItem("vhs_movie_capsule", JSON.stringify(arr));
+            resetInput();
+            renderTapes();
+        }
+        function resetInput(){
+            document.getElementById("workTitle").value = "";
+            document.getElementById("quoteText").value = "";
+            document.getElementById("feelText").value = "";
+            document.getElementById("unlockDate").value = "";
+            document.getElementById("imgUpload").value = "";
+            tempImgBase64 = "";
+        }
+        function editTape(idx){
+            const arr = getTapes();
+            const target = arr[idx];
+            const newTitle = prompt("修改作品名：", target.title);
+            if(newTitle === null) return;
+            const newQuote = prompt("修改台词摘录：", target.quote);
+            if(newQuote === null) return;
+            const newFeel = prompt("修改观后感：", target.feel);
+            if(newFeel === null) return;
+            const newDate = prompt("修改解锁日期(留空=直接可见，格式YYYY-MM-DD)：", target.unlockDate || "");
+            if(newDate === null) return;
+            const t = newTitle.trim();
+            if(!t) return alert("作品名不能为空");
+            arr[idx].title = t;
+            arr[idx].quote = newQuote.trim();
+            arr[idx].feel = newFeel.trim();
+            arr[idx].unlockDate = newDate.trim();
+            arr[idx].animated = false;
+            localStorage.setItem("vhs_movie_capsule", JSON.stringify(arr));
+            renderTapes();
+        }
+        function delTape(idx){
+            if(!confirm("确定销毁这份观影胶囊？无法恢复！")) return;
+            const arr = getTapes();
+            arr.splice(idx, 1);
+            localStorage.setItem("vhs_movie_capsule", JSON.stringify(arr));
+            renderTapes();
+        }
+        renderTapes();
+
         function goBack(){
+            if(leaving) return;
+            leaving = true;
             document.body.style.animation = "fadeOut 0.9s ease forwards";
             setTimeout(()=>{
                 location.href="menu.html";
