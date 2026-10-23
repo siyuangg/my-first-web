@@ -18,15 +18,9 @@
             0%,100% { opacity:0.25; }
             50% { opacity:1; }
         }
-        @keyframes meteor {
-            0% {
-                transform: translateX(0) translateY(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(-320px) translateY(240px);
-                opacity: 0;
-            }
+        @keyframes popIn {
+            from { opacity:0; transform: scale(0.9); }
+            to { opacity:1; transform: scale(1); }
         }
         body {
             opacity: 0;
@@ -39,10 +33,10 @@
             color: #d8d0ff;
             font-family: "微软雅黑", monospace;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
             padding: 20px;
         }
-        /* 星星 */
+        /* 背景静态星星 */
         .star {
             position: absolute;
             background: #fff;
@@ -51,18 +45,22 @@
             z-index: 1;
             pointer-events: none;
         }
-        /* 流星 */
-        .meteor{
+        /* 心愿流星（可点击拾取） */
+        .wish-meteor{
             position:absolute;
-            height:1px;
+            height:2px;
             background: linear-gradient(to left, #fff, transparent);
-            animation: meteor 1.2s linear forwards;
-            z-index:1;
-            pointer-events:none;
+            z-index: 3;
+            cursor: pointer;
+            transition: filter 0.2s, transform 0.2s;
+        }
+        .wish-meteor:hover{
+            filter: drop-shadow(0 0 10px #c8b4ff);
+            transform: scale(1.3);
         }
         .wrap {
             text-align:center;
-            z-index: 2;
+            z-index: 5;
             width: 100%;
             max-width:700px;
         }
@@ -118,30 +116,54 @@
             background:#251844;
             box-shadow:0 0 12px #8866dd;
         }
-        .wish-item{
-            padding:10px;
-            margin:8px 0;
-            border-radius:6px;
-            background:#0a071b;
-            position:relative;
-            box-shadow: 0 0 6px #503888;
-            transition: 0.3s;
-        }
-        .wish-item:hover{
-            box-shadow: 0 0 14px #7755bb;
-        }
-        .wish-del{
-            position:absolute;
-            right:8px;
-            top:6px;
-            font-size:12px;
-            padding:2px 6px;
-        }
         .back-btn {
             width:100%;
             padding:14px;
             font-size:18px;
             margin-top:8px;
+        }
+        /* 弹窗遮罩 */
+        .modal-mask{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.65);
+            z-index:99;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+        }
+        .modal-box{
+            background:#0c0920;
+            border:1px solid #7755bb;
+            border-radius:14px;
+            padding:24px;
+            max-width:520px;
+            width:100%;
+            animation: popIn 0.35s ease;
+        }
+        .modal-title{
+            font-size:20px;
+            margin-bottom:14px;
+            color:#c3b2f0;
+        }
+        .wish-text{
+            padding:12px;
+            background:#080516;
+            border-radius:8px;
+            margin-bottom:16px;
+            line-height:1.6;
+        }
+        .modal-buttons{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+            margin-top:14px;
+        }
+        .tip-text{
+            margin-top:12px;
+            color:#b8a8ee;
+            line-height:1.6;
         }
     </style>
 </head>
@@ -154,10 +176,9 @@
             <div class="card-title">✨ 星空心愿</div>
             <textarea id="wishInput" placeholder="写下心愿，托付给星星……"></textarea>
             <div class="btn-row">
-                <button onclick="addWish()">寄存心愿</button>
-                <button onclick="clearAllWish()">清空全部心愿</button>
+                <button onclick="addWish()">寄存心愿，化作流星</button>
+                <button onclick="clearAllWish()">清空所有流星心愿</button>
             </div>
-            <div id="wishBox"></div>
         </div>
 
         <button class="back-btn" onclick="goBack()">返回菜单</button>
@@ -177,7 +198,7 @@
         const subTitleDom = document.querySelector('.sub-title');
         subTitleDom.innerText = starSentences[Math.floor(Math.random() * starSentences.length)];
 
-        // 生成星星，每个星星闪烁速度不一样
+        // 生成背景静态星星
         for(let i=0; i<120; i++){
             const s = document.createElement('div');
             s.className = 'star';
@@ -192,70 +213,183 @@
             document.body.appendChild(s);
         }
 
-        // 流星定时生成
-        function createMeteor(){
-            const m = document.createElement('div');
-            m.className = 'meteor';
-            m.style.top = Math.random() * 40 + '%';
-            m.style.right = '0px';
-            document.body.appendChild(m);
-            setTimeout(()=>{
-                m.remove();
-            },1200);
-        }
-        // 每隔一段时间随机出现流星
-        setInterval(()=>{
-            if(Math.random()>0.5){
-                createMeteor();
-            }
-        }, 4500);
+        // 搞怪祝福库
+        const blessList = [
+            "恭喜！心愿打卡成功！欧气持续续费✨",
+            "厉害啦！星星说你超有实力！",
+            "心愿落地，好运buff叠满！",
+            "太棒咯，宇宙听到你的呼唤啦！",
+            "恭喜通关！奖励一份隐藏好运！",
+            "愿望签收成功，接下来继续闪闪发光",
+            "可以啊，被你拿捏住心愿了！",
+            "星星：果然没有看错你！",
+            "心愿达成，奶茶可以安排上了！",
+            "好运加载完毕，下一个愿望继续冲！"
+        ];
 
-
-        const wishBox = document.getElementById('wishBox');
-        const wishInput = document.getElementById('wishInput');
+        // 心愿数据结构：{text, feel, done, x, y, vx, vy, width}
         let wishList = JSON.parse(localStorage.getItem('starWishList')) || [];
+        let meteorElements = []; // 存放流星dom
+        let animationId = null;
 
-        function renderWish(){
-            wishBox.innerHTML="";
-            wishList.forEach((item,i)=>{
-                const div=document.createElement("div");
-                div.className="wish-item";
-                div.innerHTML = `
-                    ${item}
-                    <button class="wish-del" onclick="delWish(${i})">收回</button>
-                `;
-                wishBox.appendChild(div);
+        // 渲染流星 + 初始化运动参数
+        function renderWishMeteors(){
+            // 清除旧流星
+            meteorElements.forEach(el=>el.remove());
+            meteorElements = [];
+
+            wishList.forEach((wishObj, idx)=>{
+                const m = document.createElement('div');
+                m.className = 'wish-meteor';
+                m.dataset.idx = idx;
+                const w = Math.random() * 70 + 40;
+                const startX = Math.random() * (window.innerWidth - w);
+                const startY = Math.random() * (window.innerHeight - 120);
+                // 随机速度，范围平缓
+                const speed = 0.25 + Math.random() * 0.35;
+                const angle = Math.random() * Math.PI * 2;
+
+                wishObj.x = startX;
+                wishObj.y = startY;
+                wishObj.vx = Math.cos(angle) * speed;
+                wishObj.vy = Math.sin(angle) * speed;
+                wishObj.width = w;
+
+                m.style.width = w + 'px';
+                m.style.left = wishObj.x + 'px';
+                m.style.top = wishObj.y + 'px';
+                m.onclick = ()=> openWishModal(idx);
+                document.body.appendChild(m);
+                meteorElements.push(m);
             })
         }
+
+        // 流星循环漫游动画（边界反弹）
+        function animateMeteors(){
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+            wishList.forEach((wishObj, idx)=>{
+                const m = meteorElements[idx];
+                if(!m) return;
+                wishObj.x += wishObj.vx;
+                wishObj.y += wishObj.vy;
+                // 碰到左右边界反弹
+                if(wishObj.x <=0 || wishObj.x + wishObj.width >= winW){
+                    wishObj.vx *= -1;
+                }
+                // 碰到上下边界反弹（避开上方文字区域 top:140px）
+                if(wishObj.y <= 140 || wishObj.y >= winH - 20){
+                    wishObj.vy *= -1;
+                }
+                m.style.left = wishObj.x + 'px';
+                m.style.top = wishObj.y + 'px';
+            })
+            animationId = requestAnimationFrame(animateMeteors);
+        }
+
+        // 添加心愿
         function addWish(){
             const text = wishInput.value.trim();
             if(!text) return;
-            wishList.push(text);
+            const w = Math.random() * 70 + 40;
+            const startX = Math.random() * (window.innerWidth - w);
+            const startY = Math.random() * (window.innerHeight - 120);
+            const speed = 0.25 + Math.random() * 0.35;
+            const angle = Math.random() * Math.PI * 2;
+            wishList.push({
+                text: text,
+                feel: "",
+                done: false,
+                x: startX,
+                y: startY,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                width:w
+            });
             localStorage.setItem('starWishList',JSON.stringify(wishList));
-            renderWish();
+            renderWishMeteors();
             wishInput.value="";
         }
-        function delWish(i){
-            wishList.splice(i,1);
+
+        // 打开心愿弹窗
+        function openWishModal(idx){
+            const wish = wishList[idx];
+            document.querySelector('.modal-mask')?.remove();
+
+            const mask = document.createElement('div');
+            mask.className = "modal-mask";
+            mask.innerHTML = `
+                <div class="modal-box">
+                    <div class="modal-title">🌠 拾取到一颗心愿流星</div>
+                    <div class="wish-text">${wish.text}</div>
+                    ${wish.feel ? `<div class="tip-text">📝 曾经写下的感受：${wish.feel}</div>` : ""}
+                    ${wish.done ? `<div class="tip-text">✅ 标记：心愿已经实现！</div>` : ""}
+                    <textarea id="feelInput" placeholder="写下你的感受……" style="margin-top:14px;">${wish.feel}</textarea>
+                    <div class="modal-buttons">
+                        <button onclick="wishIsDone(${idx})">心愿实现了！</button>
+                        <button onclick="saveFeel(${idx})">保存感受</button>
+                        <button onclick="closeModal()">关闭</button>
+                        <button onclick="delWish(${idx})">放走这颗流星</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(mask);
+            mask.onclick = (e)=>{ if(e.target === mask) closeModal(); }
+        }
+
+        // 标记心愿完成，弹出随机祝福
+        function wishIsDone(idx){
+            wishList[idx].done = true;
             localStorage.setItem('starWishList',JSON.stringify(wishList));
-            renderWish();
+            const bless = blessList[Math.floor(Math.random() * blessList.length)];
+            alert("🌟 "+bless);
+            closeModal();
+            renderWishMeteors();
+        }
+        // 保存感受
+        function saveFeel(idx){
+            const val = document.getElementById('feelInput').value.trim();
+            wishList[idx].feel = val;
+            localStorage.setItem('starWishList',JSON.stringify(wishList));
+            alert("感受已经托付给流星啦");
+            closeModal();
+        }
+        // 删除心愿流星
+        function delWish(idx){
+            if(confirm("确定放走这颗流星吗？心愿会消失哦")){
+                wishList.splice(idx,1);
+                localStorage.setItem('starWishList',JSON.stringify(wishList));
+                closeModal();
+                renderWishMeteors();
+            }
+        }
+        function closeModal(){
+            document.querySelector('.modal-mask')?.remove();
         }
         function clearAllWish(){
-            if(confirm("确定要收回所有托付给星星的心愿吗？")){
+            if(confirm("确定要放走夜空中所有心愿流星吗？")){
                 wishList = [];
                 localStorage.setItem('starWishList',JSON.stringify(wishList));
-                renderWish();
+                renderWishMeteors();
             }
         }
 
         function goBack(){
+            cancelAnimationFrame(animationId);
             document.body.style.animation = "fadeOut 0.9s ease forwards";
             setTimeout(()=>{
                 location.href="menu.html";
             },800);
         }
 
-        renderWish();
+        // 窗口大小变化重新刷新
+        window.addEventListener('resize',()=>{
+            renderWishMeteors();
+        })
+
+        // 初始化
+        renderWishMeteors();
+        animateMeteors();
     </script>
 </body>
 </html>
